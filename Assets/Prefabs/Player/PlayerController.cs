@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-  private bool movementBlocked;
+  private bool movementBlocked = true;
+  private bool canTouch;
   public Animator animator;
   public Vector3 leftPosition;
   public Vector3 rightPosition;
@@ -16,37 +17,53 @@ public class PlayerController : MonoBehaviour
   private void Start()
   {
     gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
+    StartCoroutine(Delay(0.1f));
   }
 
   void LateUpdate()
   {
     newScale = transform.localScale;
 
-    if (!movementBlocked)
+    if (!movementBlocked && Time.timeScale > 0f)
     {
-      if (Input.GetKeyDown(KeyCode.A))
+      if (Input.touchCount > 0 && canTouch)
       {
-        movementBlocked = true;
-        transform.position = leftPosition;
-        if (transform.localScale.x < 0)
-        {
-          newScale.x = Mathf.Abs(newScale.x);
-          transform.localScale = newScale;
-        }
-        Chop();
-      }
+        Touch touch = Input.GetTouch(0);
+        Vector3 touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
 
-      if (Input.GetKeyDown(KeyCode.D))
-      {
-        movementBlocked = true;
-        transform.position = rightPosition;
-        if (transform.localScale.x > 0)
+        if (touchPosition.x < RayDestination.position.x)
         {
-          newScale.x *= (-1);
-          transform.localScale = newScale;
+          movementBlocked = true;
+          transform.position = leftPosition;
+          if (transform.localScale.x < 0)
+          {
+            newScale.x = Mathf.Abs(newScale.x);
+            transform.localScale = newScale;
+          }
+          Chop();
         }
-        Chop();
+
+        if (touchPosition.x > RayDestination.position.x)
+        {
+          movementBlocked = true;
+          transform.position = rightPosition;
+          if (transform.localScale.x > 0)
+          {
+            newScale.x *= (-1);
+            transform.localScale = newScale;
+          }
+          Chop();
+        }
       }
+    }
+
+    if (Input.GetTouch(0).phase == TouchPhase.Ended)
+    {
+      canTouch = true;
+    }
+    else
+    {
+      canTouch = false;
     }
   }
 
@@ -59,17 +76,17 @@ public class PlayerController : MonoBehaviour
       hit.collider.gameObject.SetActive(false);
       gameController.AddScore(1);
     }
-    StartCoroutine(Delay());
+    StartCoroutine(Delay(0.1f));
   }
 
-  private IEnumerator Delay()
+  private IEnumerator Delay(float delayAmount)
   {
-    yield return new WaitForSeconds(0.1f);
+    yield return new WaitForSeconds(delayAmount);
     movementBlocked = false;
   }
 
   private void OnCollisionEnter2D(Collision2D other)
   {
-    Destroy(gameObject);
+    gameController.GameOver();
   }
 }
