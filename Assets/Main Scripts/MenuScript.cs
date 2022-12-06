@@ -32,7 +32,6 @@ public class MenuScript : MonoBehaviour
 
   public void Quit()
   {
-    Debug.Log("bruh");
     Application.Quit();
   }
 }

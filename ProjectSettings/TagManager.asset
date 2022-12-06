@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - FinalScore
+  - WoodVelocityPoint
   layers:
   - Default
   - TransparentFX
@@ -13,8 +14,8 @@ TagManager:
   - Water
   - UI
   - Wood
-  - 
-  - 
+  - Cut wood
+  - Player
   - 
   - 
   - 
@@ -39,6 +40,18 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 4026539681
+    locked: 0
+  - name: Mountain
+    uniqueID: 1022573965
+    locked: 0
+  - name: Ground
+    uniqueID: 884417331
+    locked: 0
+  - name: Trees
+    uniqueID: 1629029299
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

@@ -92,7 +92,5 @@ public class TimerScript : MonoBehaviour
     {
       currentSpeedUpAmount += timerSpeedUpAmount;
     }
-
-    Debug.Log("Timer speed up");
   }
 }

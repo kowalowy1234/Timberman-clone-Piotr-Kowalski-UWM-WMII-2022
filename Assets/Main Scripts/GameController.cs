@@ -11,12 +11,16 @@ public class GameController : MonoBehaviour
   private int score;
   public bool firstRun = true;
 
+  public AudioSource audioSource;
   public GameObject player;
   public GameObject menu;
   public GameObject finalScoreObject;
   public Text finalScoreText;
   public Text scoreText;
   public TimerScript timer;
+
+  public AudioClip failSound;
+  public AudioClip music;
 
   private void Awake()
   {
@@ -67,6 +71,10 @@ public class GameController : MonoBehaviour
     menu.SetActive(true);
     finalScoreText.text = score + "";
     finalScoreObject.SetActive(true);
+    audioSource.Stop();
+    audioSource.loop = false;
+    audioSource.clip = failSound;
+    audioSource.Play();
   }
 
   public void StartGame()
@@ -76,5 +84,8 @@ public class GameController : MonoBehaviour
     Time.timeScale = 1;
     finalScoreObject.SetActive(false);
     timer.StartTimer();
+    audioSource.clip = music;
+    audioSource.loop = true;
+    audioSource.Play();
   }
 }

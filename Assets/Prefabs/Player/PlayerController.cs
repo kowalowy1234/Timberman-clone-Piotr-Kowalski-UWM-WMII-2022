@@ -9,8 +9,10 @@ public class PlayerController : MonoBehaviour
   public Vector3 leftPosition;
   public Vector3 rightPosition;
 
+  public AudioSource audioSource;
   public Transform RaySource;
   public Transform RayDestination;
+  public Transform WoodForcePoint;
   private Vector3 newScale;
   private GameController gameController;
 
@@ -20,7 +22,7 @@ public class PlayerController : MonoBehaviour
     StartCoroutine(Delay(0.1f));
   }
 
-  void LateUpdate()
+  void Update()
   {
     newScale = transform.localScale;
 
@@ -33,6 +35,7 @@ public class PlayerController : MonoBehaviour
 
         if (touchPosition.x < RayDestination.position.x)
         {
+          // Chop();
           movementBlocked = true;
           transform.position = leftPosition;
           if (transform.localScale.x < 0)
@@ -40,11 +43,12 @@ public class PlayerController : MonoBehaviour
             newScale.x = Mathf.Abs(newScale.x);
             transform.localScale = newScale;
           }
-          Chop();
+          animator.SetTrigger("Chop");
         }
 
         if (touchPosition.x > RayDestination.position.x)
         {
+          // Chop();
           movementBlocked = true;
           transform.position = rightPosition;
           if (transform.localScale.x > 0)
@@ -52,7 +56,7 @@ public class PlayerController : MonoBehaviour
             newScale.x *= (-1);
             transform.localScale = newScale;
           }
-          Chop();
+          animator.SetTrigger("Chop");
         }
       }
     }
@@ -67,16 +71,18 @@ public class PlayerController : MonoBehaviour
     }
   }
 
-  private void Chop()
+  public void Chop()
   {
-    animator.SetTrigger("Chop");
     RaycastHit2D hit = Physics2D.Raycast(RaySource.position, RayDestination.position - RaySource.position, 2f);
     if (hit.collider != null)
     {
-      hit.collider.gameObject.SetActive(false);
+      // hit.collider.gameObject.SetActive(false);
+      hit.collider.gameObject.GetComponent<WoodScript>().DestroyWood(WoodForcePoint.position);
       gameController.AddScore(1);
+      audioSource.Play();
     }
-    StartCoroutine(Delay(0.1f));
+    movementBlocked = false;
+    // StartCoroutine(Delay(0.1f));
   }
 
   private IEnumerator Delay(float delayAmount)
