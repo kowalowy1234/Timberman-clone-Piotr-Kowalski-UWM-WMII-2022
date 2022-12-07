@@ -308,6 +308,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Trigger
       objectReference: {fileID: 0}
+    - target: {fileID: 1693533223001097624, guid: b6688916077b84a41b56809aca000182, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1693533223001097624, guid: b6688916077b84a41b56809aca000182, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3802529813243361670, guid: b6688916077b84a41b56809aca000182, type: 3}
       propertyPath: m_RootOrder
       value: 0

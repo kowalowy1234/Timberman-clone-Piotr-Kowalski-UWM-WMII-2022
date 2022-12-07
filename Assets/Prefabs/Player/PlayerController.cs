@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
   public Transform WoodForcePoint;
   private Vector3 newScale;
   private GameController gameController;
+  private Vector3 touchPosition;
 
   private void Start()
   {
@@ -31,33 +32,8 @@ public class PlayerController : MonoBehaviour
       if (Input.touchCount > 0 && canTouch)
       {
         Touch touch = Input.GetTouch(0);
-        Vector3 touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
-
-        if (touchPosition.x < RayDestination.position.x)
-        {
-          // Chop();
-          movementBlocked = true;
-          transform.position = leftPosition;
-          if (transform.localScale.x < 0)
-          {
-            newScale.x = Mathf.Abs(newScale.x);
-            transform.localScale = newScale;
-          }
-          animator.SetTrigger("Chop");
-        }
-
-        if (touchPosition.x > RayDestination.position.x)
-        {
-          // Chop();
-          movementBlocked = true;
-          transform.position = rightPosition;
-          if (transform.localScale.x > 0)
-          {
-            newScale.x *= (-1);
-            transform.localScale = newScale;
-          }
-          animator.SetTrigger("Chop");
-        }
+        touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
+        animator.SetTrigger("Chop");
       }
     }
 
@@ -73,16 +49,39 @@ public class PlayerController : MonoBehaviour
 
   public void Chop()
   {
+    movementBlocked = true;
+
     RaycastHit2D hit = Physics2D.Raycast(RaySource.position, RayDestination.position - RaySource.position, 2f);
     if (hit.collider != null)
     {
-      // hit.collider.gameObject.SetActive(false);
+      hit.collider.gameObject.GetComponent<BoxCollider2D>().enabled = false;
       hit.collider.gameObject.GetComponent<WoodScript>().DestroyWood(WoodForcePoint.position);
       gameController.AddScore(1);
       audioSource.Play();
     }
+
+    if (touchPosition.x < RayDestination.position.x)
+    {
+      movementBlocked = true;
+      transform.position = leftPosition;
+      if (transform.localScale.x < 0)
+      {
+        newScale.x = Mathf.Abs(newScale.x);
+        transform.localScale = newScale;
+      }
+    }
+    else if (touchPosition.x > RayDestination.position.x)
+    {
+      movementBlocked = true;
+      transform.position = rightPosition;
+      if (transform.localScale.x > 0)
+      {
+        newScale.x *= (-1);
+        transform.localScale = newScale;
+      }
+    }
+
     movementBlocked = false;
-    // StartCoroutine(Delay(0.1f));
   }
 
   private IEnumerator Delay(float delayAmount)

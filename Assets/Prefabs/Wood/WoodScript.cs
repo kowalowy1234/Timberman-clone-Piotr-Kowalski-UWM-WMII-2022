@@ -12,27 +12,16 @@ public class WoodScript : MonoBehaviour
     boxCollider = gameObject.GetComponent<BoxCollider2D>();
   }
 
-  private void Update()
-  {
-    if (Physics2D.Raycast(transform.position, transform.up * (-2)).collider == null && transform.position.y + -2f > 0f)
-    {
-      transform.position += new Vector3(0f, -2f, 0f);
-    }
-  }
-
   private void OnEnable()
   {
     boxCollider.enabled = true;
-    gameObject.layer = 6;
   }
 
   public void DestroyWood(Vector3 forceVector)
   {
-    gameObject.layer = 7;
     boxCollider.enabled = false;
     rb.gravityScale = 1;
     rb.AddForce(new Vector3(forceVector.x, 0f, 0f) * 10, ForceMode2D.Impulse);
-    rb.AddTorque(10f);
     StartCoroutine(DelayAndDeactivate());
   }
 
